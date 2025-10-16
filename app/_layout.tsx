@@ -35,6 +35,9 @@ function AppNavigation() {
           headerTintColor: theme.text,
           headerShadowVisible: false,
           contentStyle: { backgroundColor: theme.background },
+          headerTitleStyle: { fontSize: 18, fontWeight: '700' },
+          headerTitleAlign: 'left',
+          animation: 'slide_from_right',
         }}
       >
         <Stack.Screen name="index" options={{ title: 'Home' }} />

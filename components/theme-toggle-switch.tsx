@@ -10,12 +10,12 @@ export const ThemeToggleSwitch = ({ label = 'Dark Mode' }: ThemeToggleSwitchProp
   const { mode, toggleTheme, theme } = useTheme();
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.card, borderColor: theme.border }]}>
+    <View style={[styles.container, { backgroundColor: theme.surface, borderColor: theme.border }]}>
       <Text style={[styles.label, { color: theme.text }]}>{label}</Text>
       <Switch
         value={mode === 'dark'}
         onValueChange={toggleTheme}
-        trackColor={{ false: '#CBD5F5', true: theme.primary }}
+        trackColor={{ false: theme.muted, true: theme.primary }}
         thumbColor={mode === 'dark' ? theme.accent : '#FFFFFF'}
       />
     </View>
@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 18,
     borderWidth: 1,
+    gap: 12,
   },
   label: {
     fontSize: 18,

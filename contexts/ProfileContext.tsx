@@ -13,7 +13,7 @@ type ProfileContextValue = {
 
 const defaultProfile: Profile = {
   name: 'Jordan Smith',
-  bio: 'Product designer who loves turning complex ideas into intuitive experiences.',
+  bio: 'Design leader crafting inclusive digital systems and guiding teams toward thoughtful outcomes.',
   avatar: 'https://i.pravatar.cc/240?img=12',
 };
 

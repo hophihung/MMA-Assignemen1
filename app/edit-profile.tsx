@@ -1,7 +1,16 @@
 import { useRouter } from 'expo-router';
 import type { FormikProps } from 'formik';
 import { Formik } from 'formik';
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import {
+    KeyboardAvoidingView,
+    Platform,
+    Pressable,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    View,
+} from 'react-native';
 import * as Yup from 'yup';
 
 import { useProfile } from '@/contexts/ProfileContext';
@@ -51,58 +60,72 @@ export default function EditProfileScreen() {
         } = formik;
 
         return (
-        <ScrollView
-          contentContainerStyle={styles.content}
-          style={[styles.screen, { backgroundColor: theme.background }]}
-          keyboardShouldPersistTaps="handled"
-        >
-          <View style={styles.fieldGroup}>
-            <Text style={[styles.label, { color: theme.text }]}>Name</Text>
-            <TextInput
-              value={values.name}
-              onChangeText={handleChange('name')}
-              onBlur={handleBlur('name')}
-              placeholder="Your name"
-              style={[styles.input, { backgroundColor: theme.inputBackground, color: theme.text, borderColor: theme.border }]}
-              placeholderTextColor={theme.secondaryText}
-            />
-            {touched.name && errors.name ? (
-              <Text style={[styles.errorText, { color: theme.accent }]}>{errors.name}</Text>
-            ) : null}
-          </View>
-          <View style={styles.fieldGroup}>
-            <Text style={[styles.label, { color: theme.text }]}>Bio</Text>
-            <TextInput
-              value={values.bio}
-              onChangeText={handleChange('bio')}
-              onBlur={handleBlur('bio')}
-              placeholder="Tell us about yourself"
-              style={[styles.input, styles.multilineInput, { backgroundColor: theme.inputBackground, color: theme.text, borderColor: theme.border }]}
-              placeholderTextColor={theme.secondaryText}
-              multiline
-              numberOfLines={4}
-              textAlignVertical="top"
-            />
-            {touched.bio && errors.bio ? (
-              <Text style={[styles.errorText, { color: theme.accent }]}>{errors.bio}</Text>
-            ) : null}
-          </View>
-          <View style={styles.actions}>
-            <Pressable
-              onPress={() => router.back()}
-              style={[styles.secondaryButton, { borderColor: theme.border }]}
-              android_ripple={{ color: theme.border }}>
-              <Text style={[styles.secondaryLabel, { color: theme.secondaryText }]}>Cancel</Text>
-            </Pressable>
-            <Pressable
-              onPress={() => handleSubmit()}
-              style={[styles.primaryButton, { backgroundColor: theme.primary, opacity: !isValid || !dirty ? 0.5 : 1 }]}
-              disabled={!isValid || !dirty || isSubmitting}
-              android_ripple={{ color: theme.accent }}>
-              <Text style={styles.primaryLabel}>Save changes</Text>
-            </Pressable>
-          </View>
-        </ScrollView>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            style={[styles.safeArea, { backgroundColor: theme.background }]}
+          >
+            <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+              <View style={[styles.formCard, { backgroundColor: theme.card, borderColor: theme.border }]}>
+                <View style={styles.formHeader}>
+                  <Text style={[styles.formTitle, { color: theme.text }]}>Profile details</Text>
+                  <Text style={[styles.formSubtitle, { color: theme.secondaryText }]}>Share a concise, friendly story that helps people understand your strengths.</Text>
+                </View>
+                <View style={styles.fieldGroup}>
+                  <Text style={[styles.label, { color: theme.text }]}>Name</Text>
+                  <TextInput
+                    value={values.name}
+                    onChangeText={handleChange('name')}
+                    onBlur={handleBlur('name')}
+                    placeholder="Your name"
+                    style={[styles.input, { backgroundColor: theme.inputBackground, color: theme.text, borderColor: theme.border }]}
+                    placeholderTextColor={theme.secondaryText}
+                    selectionColor={theme.primary}
+                  />
+                  {touched.name && errors.name ? (
+                    <Text style={[styles.errorText, { color: theme.accent }]}>{errors.name}</Text>
+                  ) : (
+                    <Text style={[styles.helperText, { color: theme.secondaryText }]}>Use your preferred name or the one collaborators recognize.</Text>
+                  )}
+                </View>
+                <View style={styles.fieldGroup}>
+                  <Text style={[styles.label, { color: theme.text }]}>Bio</Text>
+                  <TextInput
+                    value={values.bio}
+                    onChangeText={handleChange('bio')}
+                    onBlur={handleBlur('bio')}
+                    placeholder="Tell us about yourself"
+                    style={[styles.input, styles.multilineInput, { backgroundColor: theme.inputBackground, color: theme.text, borderColor: theme.border }]}
+                    placeholderTextColor={theme.secondaryText}
+                    selectionColor={theme.primary}
+                    multiline
+                    numberOfLines={4}
+                    textAlignVertical="top"
+                  />
+                  {touched.bio && errors.bio ? (
+                    <Text style={[styles.errorText, { color: theme.accent }]}>{errors.bio}</Text>
+                  ) : (
+                    <Text style={[styles.helperText, { color: theme.secondaryText }]}>Share what drives you, the impact you bring, or a current focus area.</Text>
+                  )}
+                </View>
+              </View>
+
+              <View style={styles.actions}>
+                <Pressable
+                  onPress={() => router.back()}
+                  style={[styles.secondaryButton, { borderColor: theme.border, backgroundColor: theme.surface }]}
+                  android_ripple={{ color: theme.border }}>
+                  <Text style={[styles.secondaryLabel, { color: theme.secondaryText }]}>Cancel</Text>
+                </Pressable>
+                <Pressable
+                  onPress={() => handleSubmit()}
+                  style={[styles.primaryButton, { backgroundColor: theme.primary, opacity: !isValid || !dirty ? 0.5 : 1 }]}
+                  disabled={!isValid || !dirty || isSubmitting}
+                  android_ripple={{ color: theme.accent }}>
+                  <Text style={styles.primaryLabel}>Save changes</Text>
+                </Pressable>
+              </View>
+            </ScrollView>
+          </KeyboardAvoidingView>
         );
       }}
     </Formik>
@@ -110,12 +133,29 @@ export default function EditProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-  screen: {
+  safeArea: {
     flex: 1,
   },
   content: {
     padding: 24,
     gap: 24,
+  },
+  formCard: {
+    borderRadius: 28,
+    borderWidth: 1,
+    padding: 24,
+    gap: 20,
+  },
+  formHeader: {
+    gap: 6,
+  },
+  formTitle: {
+    fontSize: 22,
+    fontWeight: '700',
+  },
+  formSubtitle: {
+    fontSize: 15,
+    lineHeight: 22,
   },
   fieldGroup: {
     gap: 8,
@@ -136,6 +176,10 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 14,
+  },
+  helperText: {
+    fontSize: 13,
+    lineHeight: 18,
   },
   actions: {
     flexDirection: 'row',
